@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   db:
     image: postgres
@@ -20,5 +18,24 @@ services:
     ports:
       - 8080:8080
 
+  minio:
+    image: quay.io/minio/minio:RELEASE.2024-07-29T22-14-52Z
+    command: server --console-address ":9001" /data
+    ports:
+      - 9000:9000
+      - 9001:9001
+    environment:
+      MINIO_ROOT_USER: root
+      MINIO_ROOT_PASSWORD: password
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    hostname: minio
+    volumes:
+      - minio:/data
+
 volumes:
   db-data:
+  minio:
