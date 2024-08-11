@@ -5,7 +5,4 @@ export type MailConfig = {
   password?: string;
   defaultEmail?: string;
   defaultName?: string;
-  ignoreTLS: boolean;
-  secure: boolean;
-  requireTLS: boolean;
 };

@@ -5,9 +5,7 @@ metadata:
   labels:
     {{- include "yarm.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "yarm.selectorLabels" . | nindent 6 }}
@@ -30,6 +28,19 @@ spec:
       serviceAccountName: {{ include "yarm.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+      - name: database-migrations
+        image: "{{ .Values.image.repository }}:migration-{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        envFrom:
+          - configMapRef:
+              name: {{ include "yarm.fullname" . }}
+      - name: seed-db
+        image: "{{ .Values.image.repository }}:seed-{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        envFrom:
+          - configMapRef:
+              name: {{ include "yarm.fullname" . }}
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
@@ -50,6 +61,9 @@ spec:
           volumeMounts:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          envFrom:
+          - configMapRef:
+              name: {{ include "yarm.fullname" . }}
       {{- with .Values.volumes }}
       volumes:
         {{- toYaml . | nindent 8 }}

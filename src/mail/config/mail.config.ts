@@ -6,7 +6,6 @@ import {
   Min,
   Max,
   IsOptional,
-  IsBoolean,
   IsEmail,
 } from 'class-validator';
 import validateConfig from '../../utils/validate-config';
@@ -35,15 +34,6 @@ class EnvironmentVariablesValidator {
 
   @IsString()
   MAIL_DEFAULT_NAME: string;
-
-  @IsBoolean()
-  MAIL_IGNORE_TLS: boolean;
-
-  @IsBoolean()
-  MAIL_SECURE: boolean;
-
-  @IsBoolean()
-  MAIL_REQUIRE_TLS: boolean;
 }
 
 export default registerAs<MailConfig>('mail', () => {
@@ -56,8 +46,5 @@ export default registerAs<MailConfig>('mail', () => {
     password: process.env.MAIL_PASSWORD,
     defaultEmail: process.env.MAIL_DEFAULT_EMAIL,
     defaultName: process.env.MAIL_DEFAULT_NAME,
-    ignoreTLS: process.env.MAIL_IGNORE_TLS === 'true',
-    secure: process.env.MAIL_SECURE === 'true',
-    requireTLS: process.env.MAIL_REQUIRE_TLS === 'true',
   };
 });

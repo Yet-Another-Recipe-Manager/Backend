@@ -1,0 +1,36 @@
+DATABASE_URL: 'postgresql://{{ .Values.database.user }}:{{ .Values.database.password }}@{{ .Values.database.host }}:{{ .Values.database.port }}/{{ .Values.database.db }}?schema=public'
+
+#app
+NODE_ENV: '{{ .Values.environment }}'
+APP_PORT: '{{ .Values.service.port }}'
+FRONTEND_DOMAIN: '{{ .Values.yarm.frontendDomain }}'
+BACKEND_DOMAIN: '{{ .Values.yarm.backendDomain }}'
+API_PREFIX: api
+APP_FALLBACK_LANGUAGE: '{{ .Values.yarm.fallbackLng }}'
+APP_HEADER_LANGUAGE: x-custom-lang
+
+# auth module
+AUTH_JWT_SECRET: lvxPKWoEKekwS8dv7m/iD7QOEzkqJgnNKYXMplBMuXBFK36EDvZ6WFyT6Xy6DSWX
+AUTH_JWT_TOKEN_EXPIRES_IN: 24h
+AUTH_REFRESH_SECRET: 1rcE8tYqdpjQOe5Z3/6vEWc9QUT2O85LimeH0jj7VwlQDX3hNw3XWS4kJTByEtPk
+AUTH_REFRESH_TOKEN_EXPIRES_IN: 7d
+AUTH_FORGOT_SECRET: pTg4qbZjNbouAJAWzjAQz2nixoomHu+R758GyCSWj4kdDaFEWoh3nt9uGBZZ/vkG
+AUTH_FORGOT_TOKEN_EXPIRES_IN: 12h
+AUTH_CONFIRM_EMAIL_SECRET: jAku96E/OupLPsVKihRUu+5IuLlII23d4Dev5fKImQCgarE4rSDne/r0WIY7GMu0
+AUTH_CONFIRM_EMAIL_TOKEN_EXPIRES_IN: 2d
+
+# file module
+DEFAULT_S3_BUCKET: '{{ Values.s3.bucket }}'
+ACCESS_KEY_ID: '{{ Values.s3.accessKey }}'
+SECRET_ACCESS_KEY: '{{ Values.s3.secretAccessKey }}'
+S3_REGION: '{{ Values.s3.region }}'
+S3_HOST: '{{ Values.s3.endpoint }}'
+PUBLIC_S3_HOST: '{{ Values.s3.publicEndpoint }}'
+
+# mail module
+MAIL_PORT: '{{ Values.mail.port }}'
+MAIL_HOST: '{{ Values.mail.host }}'
+MAIL_USER: '{{ Values.mail.user }}'
+MAIL_PASSWORD: '{{ Values.mail.password }}'
+MAIL_DEFAULT_EMAIL: '{{ Values.mail.address }}'
+MAIL_DEFAULT_NAME: '{{ Values.mail.name }}'

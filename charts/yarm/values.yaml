@@ -1,18 +1,47 @@
-# Default values for yarm.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
 replicaCount: 1
 
 image:
-  repository: nginx
+  repository: registry.roth-kl.de/yet-another-recipe-manager/backend
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: ''
 
 imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
+nameOverride: ''
+fullnameOverride: ''
+
+database:
+  host: localhost
+  port: 5432
+  user: postgres
+  password: password
+  db: yarm
+
+s3:
+  bucket: yarm
+  accessKey: ''
+  secretAccessKey: ''
+  region: ''
+  endpoint: ''
+  publicEndpoint: ''
+
+smtp:
+  port: 587
+  host: ''
+  user: ''
+  password: ''
+  address: yarm@yarm.com
+  name: Yet Another Recipe Manager
+
+# NODE_ENV
+environment: production
+
+yarm:
+  frontendDomain: ''
+  backendDomain: ''
+  fallbackLng: en
+
+env: {}
 
 serviceAccount:
   # Specifies whether a service account should be created
@@ -23,15 +52,17 @@ serviceAccount:
   annotations: {}
   # The name of the service account to use.
   # If not set and create is true, a name is generated using the fullname template
-  name: ""
+  name: ''
 
 podAnnotations: {}
 podLabels: {}
 
-podSecurityContext: {}
+podSecurityContext:
+  {}
   # fsGroup: 2000
 
-securityContext: {}
+securityContext:
+  {}
   # capabilities:
   #   drop:
   #   - ALL
@@ -45,8 +76,9 @@ service:
 
 ingress:
   enabled: false
-  className: ""
-  annotations: {}
+  className: ''
+  annotations:
+    {}
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
   hosts:
@@ -59,7 +91,8 @@ ingress:
   #    hosts:
   #      - chart-example.local
 
-resources: {}
+resources:
+  {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts run on environments with little
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
@@ -79,13 +112,6 @@ readinessProbe:
   httpGet:
     path: /
     port: http
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
 volumes: []
