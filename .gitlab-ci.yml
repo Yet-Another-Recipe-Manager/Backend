@@ -1,12 +1,16 @@
 stages:
   - build
 
+variables:
+  CHARTS_DIR: 'charts'
+  PACKAGE_PATH: 'packages'
+
 build-release:
   variables:
     GIT_SUBMODULE_STRATEGY: recursive
   stage: build
   image:
-    name: gcr.io/kaniko-project/executor:v1.21.0-debug
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
     entrypoint: ['']
   script:
     - export VERSION="v$(cat package.json | grep version | head -1 | awk -F':' '{ print $2 }' | sed 's/[\",]//g' | cut -c2-)"
@@ -42,7 +46,7 @@ build:
     GIT_SUBMODULE_STRATEGY: recursive
   stage: build
   image:
-    name: gcr.io/kaniko-project/executor:v1.21.0-debug
+    name: gcr.io/kaniko-project/executor:v1.23.2-debug
     entrypoint: ['']
   script:
     - /kaniko/executor
@@ -67,3 +71,29 @@ build:
       --target seed
   rules:
     - if: $CI_COMMIT_BRANCH == "master"
+
+build-chart:
+  stage: build
+  image:
+    name: alpine/helm:latest
+    entrypoint: ['']
+  script:
+    - mkdir -p ${PACKAGE_PATH}
+    - |
+      for dir in ${CHARTS_DIR}/*; do
+        if [ -d "$dir" ]; then
+          CHART_NAME=$(basename $dir)
+          helm package $dir --destination ${PACKAGE_PATH}
+          mv ${PACKAGE_PATH}/*.tgz ${PACKAGE_PATH}/${CHART_NAME}.tgz
+        fi
+      done
+    - |
+      for chart in ${PACKAGE_PATH}/*.tgz; do
+        echo "Uploading $chart..."
+        if [ -f "$chart" ]; then
+          curl --request POST --form "chart=@$chart" --user gitlab-ci-token:$CI_JOB_TOKEN "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/helm/api/stable/charts"
+        fi
+        echo "Done"
+      done
+  only:
+    - main
