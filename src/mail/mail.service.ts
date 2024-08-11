@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { I18nContext } from 'nestjs-i18n';
-import path from 'path';
+import { join } from 'path';
 import { AllConfigType } from '../config/config.type';
 import { MailData } from './interface/mail-data.interface';
 import { MailerService } from 'src/mailer/mailer.service';
@@ -41,7 +41,7 @@ export class MailService {
       to: mailData.to,
       subject: emailConfirmTitle,
       text: `${url.toString()} ${emailConfirmTitle}`,
-      templatePath: path.join(
+      templatePath: join(
         this.configService.getOrThrow('app.workingDirectory', {
           infer: true,
         }),
@@ -94,7 +94,7 @@ export class MailService {
       to: mailData.to,
       subject: resetPasswordTitle,
       text: `${url.toString()} ${resetPasswordTitle}`,
-      templatePath: path.join(
+      templatePath: join(
         this.configService.getOrThrow('app.workingDirectory', {
           infer: true,
         }),
@@ -145,7 +145,7 @@ export class MailService {
       to: mailData.to,
       subject: emailConfirmTitle,
       text: `${url.toString()} ${emailConfirmTitle}`,
-      templatePath: path.join(
+      templatePath: join(
         this.configService.getOrThrow('app.workingDirectory', {
           infer: true,
         }),

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import fs from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { ConfigService } from '@nestjs/config';
 import Handlebars from 'handlebars';
 import { AllConfigType } from '../config/config.type';
@@ -12,9 +12,9 @@ export class MailerService {
     this.transporter = createTransport({
       host: configService.get('mail.host', { infer: true }),
       port: configService.get('mail.port', { infer: true }),
-      ignoreTLS: configService.get('mail.ignoreTLS', { infer: true }),
-      secure: configService.get('mail.secure', { infer: true }),
-      requireTLS: configService.get('mail.requireTLS', { infer: true }),
+      // ignoreTLS: configService.get('mail.ignoreTLS', { infer: true }),
+      // secure: configService.get('mail.secure', { infer: true }),
+      // requireTLS: configService.get('mail.requireTLS', { infer: true }),
       auth: {
         user: configService.get('mail.user', { infer: true }),
         pass: configService.get('mail.password', { infer: true }),
@@ -32,7 +32,7 @@ export class MailerService {
   }): Promise<void> {
     let html: string | undefined;
     if (templatePath) {
-      const template = await fs.readFile(templatePath, 'utf-8');
+      const template = await readFile(templatePath, 'utf-8');
       html = Handlebars.compile(template, {
         strict: true,
       })(context);

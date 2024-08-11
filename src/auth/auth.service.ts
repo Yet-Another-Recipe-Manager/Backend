@@ -1,6 +1,7 @@
 import {
   HttpStatus,
   Injectable,
+  Logger,
   NotFoundException,
   UnauthorizedException,
   UnprocessableEntityException,
@@ -26,6 +27,8 @@ import { JwtRefreshPayloadType } from './strategies/types/jwt-refresh-payload.ty
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private jwtService: JwtService,
     private usersService: UsersService,

@@ -13,6 +13,13 @@ async function bootstrap() {
   const { httpAdapter } = app.get(HttpAdapterHost);
   const configService = app.get(ConfigService<AllConfigType>);
 
+  app.setGlobalPrefix(
+    configService.getOrThrow('app.apiPrefix', { infer: true }),
+    {
+      exclude: ['/'],
+    },
+  );
+
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
