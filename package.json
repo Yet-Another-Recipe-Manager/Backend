@@ -20,7 +20,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "prepare": "husky",
     "commit": "git add . && cz",
-    "release": "yarn standard-version"
+    "release": "yarn standard-version && git push --follow-tags origin master"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.600.0",
