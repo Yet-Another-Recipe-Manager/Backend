@@ -13,6 +13,38 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Recipe {
+  id             String              @id @default(uuid())
+  name           String
+  description    String
+  ingredients    IngredientSection[]
+  steps          String
+  pictures       File[]
+  primaryPicture Int
+  visibility     Visibility
+  author         User                @relation(fields: [userId], references: [id])
+  createdAt      DateTime            @default(now())
+  updatedAt      DateTime            @updatedAt
+  userId         String
+}
+
+model IngredientSection {
+  id          String       @id @default(uuid())
+  name        String?
+  ingredients Ingredient[]
+  recipe      Recipe?      @relation(fields: [recipeId], references: [id])
+  recipeId    String?
+}
+
+model Ingredient {
+  id                  String             @id @default(uuid())
+  name                String
+  unit                String?
+  amount              String
+  IngredientSection   IngredientSection? @relation(fields: [ingredientSectionId], references: [id])
+  ingredientSectionId String?
+}
+
 model User {
   id        String    @id @default(uuid())
   name      String    @unique
@@ -22,9 +54,10 @@ model User {
   status    Status    @default(INACTIVE)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
-  Session   Session[]
+  sessions  Session[]
   picture   File?     @relation(fields: [pictureid], references: [id])
   pictureid String?
+  recipes   Recipe[]
 }
 
 model Session {
@@ -40,7 +73,9 @@ model File {
   id   String @id @default(uuid())
   path String
 
-  User User[]
+  user     User[]
+  recipe   Recipe? @relation(fields: [recipeId], references: [id])
+  recipeId String?
 }
 
 enum Role {
@@ -51,4 +86,10 @@ enum Role {
 enum Status {
   ACTIVE
   INACTIVE
+}
+
+enum Visibility {
+  PRIVATE
+  INTERNAL
+  PUBLIC
 }
